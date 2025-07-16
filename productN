@@ -1,0 +1,10 @@
+public class ProductN {
+    public static int productN(int n) {
+        if (n <= 1) return 1;
+        return n * productN(n - 1);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(productN(5));
+    }
+}
