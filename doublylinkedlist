@@ -1,0 +1,155 @@
+package DoublyLinkedList;
+class Flight {
+    String flightNumber;
+    String destination;
+    String departureTime;
+    Flight prev;
+    Flight next;
+
+    Flight(String flightNumber, String destination, String departureTime) {
+        this.flightNumber = flightNumber;
+        this.destination = destination;
+        this.departureTime = departureTime;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+public class FlightScheduleManager {
+    Flight head;
+
+    // Add at beginning
+    public void addAtBeginning(String flightNumber, String destination, String departureTime) {
+        Flight newFlight = new Flight(flightNumber, destination, departureTime);
+        if (head == null) {
+            head = newFlight;
+        } else {
+            newFlight.next = head;
+            head.prev = newFlight;
+            head = newFlight;
+        }
+    }
+
+    // Add at end
+    public void addAtEnd(String flightNumber, String destination, String departureTime) {
+        Flight newFlight = new Flight(flightNumber, destination, departureTime);
+        if (head == null) {
+            head = newFlight;
+            return;
+        }
+        Flight temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.next = newFlight;
+        newFlight.prev = temp;
+    }
+
+    // Add at specific position
+    public void addAtPosition(String flightNumber, String destination, String departureTime, int position) {
+        if (position == 1) {
+            addAtBeginning(flightNumber, destination, departureTime);
+            return;
+        }
+        Flight newFlight = new Flight(flightNumber, destination, departureTime);
+        Flight temp = head;
+        for (int i = 1; i < position - 1 && temp != null; i++) {
+            temp = temp.next;
+        }
+        if (temp == null) {
+            System.out.println("Position out of bounds");
+            return;
+        }
+        newFlight.next = temp.next;
+        if (temp.next != null) {
+            temp.next.prev = newFlight;
+        }
+        temp.next = newFlight;
+        newFlight.prev = temp;
+    }
+
+    // Delete at beginning
+    public void deleteAtBeginning() {
+        if (head == null) {
+            System.out.println("Schedule is empty.");
+            return;
+        }
+        if (head.next == null) {
+            head = null;
+        } else {
+            head = head.next;
+            head.prev = null;
+        }
+    }
+
+    // Delete at end
+    public void deleteAtEnd() {
+        if (head == null) {
+            System.out.println("Schedule is empty.");
+            return;
+        }
+        if (head.next == null) {
+            head = null;
+            return;
+        }
+        Flight temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.prev.next = null;
+    }
+
+    // Delete at specific position (1-based indexing)
+    public void deleteAtPosition(int position) {
+        if (head == null) {
+            System.out.println("Schedule is empty.");
+            return;
+        }
+        if (position == 1) {
+            deleteAtBeginning();
+            return;
+        }
+        Flight temp = head;
+        for (int i = 1; i < position && temp != null; i++) {
+            temp = temp.next;
+        }
+        if (temp == null) {
+            System.out.println("Position out of bounds.");
+            return;
+        }
+        if (temp.next != null) {
+            temp.next.prev = temp.prev;
+        }
+        if (temp.prev != null) {
+            temp.prev.next = temp.next;
+        }
+    }
+
+    // Display schedule
+    public void displaySchedule() {
+        if (head == null) {
+            System.out.println("Flight schedule is empty.");
+            return;
+        }
+        Flight temp = head;
+        System.out.println("Current Flight Schedule:");
+        while (temp != null) {
+            System.out.println("Flight: " + temp.flightNumber + ", Destination: " + temp.destination + ", Departure: " + temp.departureTime);
+            temp = temp.next;
+        }
+    }
+
+    public static void main(String[] args) {
+        FlightScheduleManager manager = new FlightScheduleManager();
+
+        manager.addAtEnd("AI101", "Delhi", "10:30");
+        manager.addAtBeginning("AI102", "Mumbai", "09:00");
+        manager.addAtEnd("AI103", "Chennai", "12:00");
+        manager.addAtPosition("AI104", "Kolkata", "11:15", 2);
+
+        manager.deleteAtBeginning();
+        manager.deleteAtEnd();
+        manager.displaySchedule();
+        manager.displaySchedule();
+    }
+}
